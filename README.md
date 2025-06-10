@@ -47,9 +47,11 @@ Animation Variants:
 
 Screen dimension custom hook:
 
+
   import { useEffect, useState } from "react"
   
   const useScreenDimension = () => {
+  
       const [dimensions, setDimensions] = useState({
           width: window.innerWidth,
           height: window.innerHeight
