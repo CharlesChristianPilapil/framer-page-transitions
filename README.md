@@ -1,54 +1,71 @@
-# React + TypeScript + Vite
+Animation Variants:
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+    const expand = {
+        initial: {
+            top: 0
+        },
+        enter: (i: number) => ({    
+            top: "100vh",
+            transition: {
+                duration: 0.4,
+                delay: 0.10 * i,
+                ease: [0.215, 0.61, 0.355, 1],
+            },
+            transitionEnd: { height: "0", top: "0" }
+        }),
+        exit: (i: number) => ({
+            height: "100vh",
+            transition: {
+                duration: 0.6,
+                delay: 0.10 * i,
+                ease: [0.215, 0.61, 0.355, 1]
+            }
+        })
+    }
 
-Currently, two official plugins are available:
+    const opacity = {
+        initial: {
+            opacity: 0.5
+        },
+        enter: {
+            opacity: 0
+        },
+        exit: {
+            opacity: 0.5,
+        }
+    }
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+    const anim = (variants: Variants, custom: number | null = null) => {
+        return {
+            initial: "initial",
+            animate: "enter",
+            exit: "exit",
+            custom,
+            variants
+        }
+    }
 
-## Expanding the ESLint configuration
+Screen dimension custom hook:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+  import { useEffect, useState } from "react"
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+  const useScreenDimension = () => {
+  
+      const [dimensions, setDimensions] = useState({
+          width: window.innerWidth,
+          height: window.innerHeight
+      });
+  
+      useEffect(() => {
+          const handleResize = () => {
+              setDimensions({width: window.innerWidth, height: window.innerHeight});
+          }
+  
+          window.addEventListener("resize", handleResize);
+          return () => window.removeEventListener("resize", handleResize);
+      }, []);
+  
+      return dimensions;
+  }
+  
+  export default useScreenDimension
